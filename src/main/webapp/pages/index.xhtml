@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <h:outputStylesheet library="css" name="main.css"/>
+</h:head>
+
+<h:body>
+    <f:view>
+        <h:form id="serverListForm" styleClass="centerTables">
+            <h3>#{msg['servers.table']}</h3>
+
+            <p:panelGrid>
+                <p:dataTable var="currentServerObject" value="#{serversView.asServerObjects}">
+                    <p:column styleClass="iconColumn" headerText="#{msg['servers.table.state']}">
+                        <p:graphicImage styleClass="icon" value="#{currentServerObject.serverDeviceActive ?
+                                'resources/images/online-icon.png' : 'resources/images/offline-icon.png'}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msg['servers.table.id']}">
+                        <h:outputText value="#{currentServerObject.serverDeviceId}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msg['servers.table.ip']}">
+                        <h:outputText value="#{currentServerObject.serverIpAddress}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msg['servers.table.name']}">
+                        <h:outputText value="#{currentServerObject.serverDeviceName}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msg['servers.table.actions']}">
+                        <p:commandButton update=":serverListForm:deviceInfoPanel"
+                                         oncomplete="PF('deviceInfoDialog').show()" title="#{msg['servers.details']}"
+                                         icon="ui-icon ui-icon-info">
+                            <f:setPropertyActionListener value="#{currentServerObject}"
+                                                         target="#{serversView.selectedServerObject}"/>
+                        </p:commandButton>
+
+                        <p:commandButton title="#{msg['servers.settings']}" icon="ui-icon ui-icon-gear">
+                        </p:commandButton>
+
+                        <p:commandButton title="#{msg['servers.disconnect']}" icon="ui-icon ui-icon-closethick">
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+            </p:panelGrid>
+
+            <p:dialog id="deviceInfoDialog" header="#{msg['servers.details']}" showEffect="fade" hideEffect="explode"
+                      widgetVar="deviceInfoDialog" modal="true" resizable="false">
+                <p:outputPanel id="deviceInfoPanel">
+                    <p:panelGrid columns="2" columnClasses="label,value"
+                                 rendered="#{not empty serversView.selectedServerObject}">
+                        <h:outputLabel for="infoId" value="#{msg['servers.table.id']}: "/>
+                        <h:outputText id="infoId" value="#{serversView.selectedServerObject.serverDeviceId}"
+                                      style="font-weight:bold"/>
+
+                        <h:outputLabel for="infoName" value="#{msg['servers.table.name']}: "/>
+                        <h:outputText id="infoName" value="#{serversView.selectedServerObject.serverDeviceName}"
+                                      style="font-weight:bold"/>
+
+                    </p:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+    </f:view>
+</h:body>
+</html>

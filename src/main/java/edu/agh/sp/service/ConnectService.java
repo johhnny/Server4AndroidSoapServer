@@ -1,64 +1,85 @@
 package edu.agh.sp.service;
 
+import edu.agh.sp.ejb.ServersHolderBean;
+import edu.agh.sp.model.ASServerObject;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Random;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 @Path("")
+@Stateless
 public class ConnectService {
+    @EJB
+    private ServersHolderBean holder;
 
-	@POST
-	@Path("/register")
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response registerDevice(byte[] gzippedWsdl, @HeaderParam("deviceIp") String ip, @HeaderParam("devicePort") String port) {
-		try {
-			String wsdl = decompress(gzippedWsdl);
-			System.out.println(wsdl);
-			System.out.println(ip + ":" + port);
-		} catch (IOException e) {
-			System.err.println(e.getMessage());
-			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-		}
-		return Response.ok().header("deviceToken", UUID.randomUUID().toString()).build();
-	}
+    // TODO wyrzucic
+    @GET
+    @Path("/test") // http://localhost:8080/Server4AndroidSoapServer/rest/test
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response test() {
+        Random r = new Random();
+        ASServerObject o = new ASServerObject();
+        o.setServerDeviceId(UUID.randomUUID().toString());
+        o.setServerDeviceName("Super android lololo " + o.getServerDeviceId().hashCode());
+        o.setServerDeviceActive(r.nextBoolean());
+        o.setServerIpAddress(r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256));
+        holder.addServer(o);
+        return Response.ok("W PYTE! dodano serwer o id: " + o.getServerDeviceId()).build();
+    }
 
-	@POST
-	@Path("/deregister")
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response deregisterDevice(@HeaderParam("deviceToken") String token) {
-		System.out.println("Deregister: " + token);
-		return Response.ok().build();
-	}
+    @POST
+    @Path("/register")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response registerDevice(byte[] gzippedWsdl, @HeaderParam("deviceIp") String ip, @HeaderParam("devicePort") String port) {
+        try {
+            String wsdl = decompress(gzippedWsdl);
+            System.out.println(wsdl);
+            System.out.println(ip + ":" + port);
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        }
+        return Response.ok().header("deviceToken", UUID.randomUUID().toString()).build();
+    }
 
-	@POST
-	@Path("/ping")
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response ping(@HeaderParam("deviceToken") String token) {
-		System.out.println("Ping: " + token);
-		return Response.ok().build();
-	}
+    @POST
+    @Path("/deregister")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response deregisterDevice(@HeaderParam("deviceToken") String token) {
+        System.out.println("Deregister: " + token);
+        return Response.ok().build();
+    }
 
-	private static String decompress(byte[] compressed) throws IOException {
-	    final int BUFFER_SIZE = 1024;
-	    ByteArrayInputStream is = new ByteArrayInputStream(compressed);
-	    GZIPInputStream gis = new GZIPInputStream(is, BUFFER_SIZE);
-	    StringBuilder string = new StringBuilder();
-	    byte[] data = new byte[BUFFER_SIZE];
-	    int bytesRead;
-	    while ((bytesRead = gis.read(data)) != -1) {
-	        string.append(new String(data, 0, bytesRead));
-	    }
-	    gis.close();
-	    is.close();
-	    return string.toString();
-	}
+    @POST
+    @Path("/ping")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response ping(@HeaderParam("deviceToken") String token) {
+        System.out.println("Ping: " + token);
+        return Response.ok().build();
+    }
+
+    private static String decompress(byte[] compressed) throws IOException {
+        final int BUFFER_SIZE = 1024;
+        ByteArrayInputStream is = new ByteArrayInputStream(compressed);
+        GZIPInputStream gis = new GZIPInputStream(is, BUFFER_SIZE);
+        StringBuilder string = new StringBuilder();
+        byte[] data = new byte[BUFFER_SIZE];
+        int bytesRead;
+        while ((bytesRead = gis.read(data)) != -1) {
+            string.append(new String(data, 0, bytesRead));
+        }
+        gis.close();
+        is.close();
+        return string.toString();
+    }
 }

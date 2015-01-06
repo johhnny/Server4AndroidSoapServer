@@ -1,0 +1,24 @@
+body {
+    margin: 0px;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #dfe4e6;
+    font-family: 'exoregular', "Trebuchet MS", Arial, Helvetica, sans-serif;
+    color: #313b3f;
+}
+
+h3 {
+    width: 80%;
+    margin: 20px auto 0;
+}
+
+.centerTables table {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+}
