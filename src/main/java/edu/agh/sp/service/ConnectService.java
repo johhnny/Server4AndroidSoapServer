@@ -6,7 +6,6 @@ import edu.agh.sp.model.ASServerObject;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Random;
-import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
 import javax.ejb.EJB;
@@ -21,20 +20,6 @@ import javax.ws.rs.core.Response.Status;
 public class ConnectService {
     @EJB
     private ServersHolderBean holder;
-
-    // TODO wyrzucic
-    @GET
-    @Path("/test") // http://localhost:8080/Server4AndroidSoapServer/rest/test
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response test() {
-        Random r = new Random();
-        ASServerObject o = new ASServerObject();
-        o.setServerDeviceName("Super android lololo " + o.getServerDeviceId().hashCode());
-        o.setServerDeviceActive(r.nextBoolean());
-        o.setServerIpAddress(r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256));
-        holder.addServer(o);
-        return Response.ok("W PYTE! dodano serwer o id: " + o.getServerDeviceId()).build();
-    }
 
     @POST
     @Path("/register")
@@ -85,11 +70,12 @@ public class ConnectService {
         return string.toString();
     }
 
+    // TODO
     private static ASServerObject createNewServer(String wsdl, String ip, String port) {
         ASServerObject newObject = new ASServerObject();
         newObject.setServerIpAddress(ip);
         newObject.setServerPort(port);
-        newObject.setServerWsdl(wsdl);
+        newObject.setServerWsdlCopy(wsdl);
         newObject.setServerDeviceName("Android device " + ip + ":" + port);
 
         return newObject;

@@ -1,6 +1,9 @@
 package edu.agh.sp.model;
 
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -8,16 +11,29 @@ import java.util.UUID;
  * on 05.01.2015
  */
 public class ASServerObject implements Serializable, Comparable<ASServerObject> {
+    /* UUID */
     private String serverDeviceId;
-    private String serverDeviceName;
+    /* Last ping */
+    private DateTime serverLastPing;
+    /* Is device active? */
     private Boolean serverDeviceActive;
+    /* Android device IP address */
     private String serverIpAddress;
+    /* Android device port */
     private String serverPort;
-    private String serverWsdl;
+    /* WSDL copy */
+    private String serverWsdlCopy;
+    /* WSDL link */
+    private String serverWsdlExternalLink;
+    /* List of android server methods from WSDL */
+    private List<String> serverMethodsList;
+    /* TODO - czy bedzie potrzebne? */
+    private String serverDeviceName;
 
     public ASServerObject() {
         serverDeviceId = UUID.randomUUID().toString();
         serverDeviceActive = true;
+        serverLastPing = new DateTime();
     }
 
     public String getServerDeviceId() {
@@ -56,12 +72,36 @@ public class ASServerObject implements Serializable, Comparable<ASServerObject> 
         this.serverPort = serverPort;
     }
 
-    public String getServerWsdl() {
-        return serverWsdl;
+    public String getServerWsdlCopy() {
+        return serverWsdlCopy;
     }
 
-    public void setServerWsdl(String serverWsdl) {
-        this.serverWsdl = serverWsdl;
+    public void setServerWsdlCopy(String serverWsdlCopy) {
+        this.serverWsdlCopy = serverWsdlCopy;
+    }
+
+    public String getServerWsdlExternalLink() {
+        return serverWsdlExternalLink;
+    }
+
+    public void setServerWsdlExternalLink(String serverWsdlExternalLink) {
+        this.serverWsdlExternalLink = serverWsdlExternalLink;
+    }
+
+    public DateTime getServerLastPing() {
+        return serverLastPing;
+    }
+
+    public void setServerLastPing(DateTime serverLastPing) {
+        this.serverLastPing = serverLastPing;
+    }
+
+    public List<String> getServerMethodsList() {
+        return serverMethodsList;
+    }
+
+    public void setServerMethodsList(List<String> serverMethodsList) {
+        this.serverMethodsList = serverMethodsList;
     }
 
     @Override

@@ -26,16 +26,6 @@ public class ServersHolderBean {
         logger.log(Level.FINE, "START");
 
         serverObjectSet = new LinkedHashSet<>();
-//        Random r = new Random();
-//
-//        for (int i = 0; i < 5; i++) {
-//            ASServerObject o = new ASServerObject();
-//            o.setServerDeviceId(UUID.randomUUID().toString());
-//            o.setServerDeviceName("Super android lololo " + o.getServerDeviceId().hashCode());
-//            o.setServerDeviceActive(r.nextBoolean());
-//            o.setServerIpAddress(r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256));
-//            serverObjectSet.add(o);
-//        }
 
         logger.log(Level.FINE, "END");
     }
