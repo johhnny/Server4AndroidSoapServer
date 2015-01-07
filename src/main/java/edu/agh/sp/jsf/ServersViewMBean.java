@@ -1,63 +1,66 @@
 package edu.agh.sp.jsf;
 
-import edu.agh.sp.ejb.ServersHolderBean;
-import edu.agh.sp.model.ASServerObject;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import java.io.Serializable;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import edu.agh.sp.ejb.ServersHolderBean;
+import edu.agh.sp.model.ASServerObject;
 
 /**
- * Created by Krzysztof Broncel
- * on 05.01.2015
+ * Created by Krzysztof Broncel on 05.01.2015
  */
 @ViewScoped
 @ManagedBean(name = "serversView")
 public class ServersViewMBean implements Serializable {
-    private static final Logger logger = Logger.getLogger(ServersViewMBean.class.getName());
 
-    @EJB
-    private ServersHolderBean serversHolderBean;
+	private static final long serialVersionUID = 723258610733794351L;
 
-    private Set<ASServerObject> asServerObjects;
+	private static final Logger logger = Logger.getLogger(ServersViewMBean.class.getName());
 
-    private ASServerObject selectedServerObject;
+	@EJB
+	private ServersHolderBean serversHolderBean;
 
-    @PostConstruct
-    private void init() {
-        logger.log(Level.FINE, "START");
+	private Collection<ASServerObject> asServerObjects;
 
-        asServerObjects = serversHolderBean.getServers();
+	private ASServerObject selectedServerObject;
 
-        logger.log(Level.FINE, "END");
-    }
+	@PostConstruct
+	private void init() {
+		logger.log(Level.FINE, "START");
 
-    public Set<ASServerObject> getAsServerObjects() {
-        return asServerObjects;
-    }
+		asServerObjects = serversHolderBean.getServers();
 
-    public void setAsServerObjects(Set<ASServerObject> asServerObjects) {
-        this.asServerObjects = asServerObjects;
-    }
+		logger.log(Level.FINE, "END");
+	}
 
-    public ASServerObject getSelectedServerObject() {
-        return selectedServerObject;
-    }
+	public Collection<ASServerObject> getAsServerObjects() {
+		return asServerObjects;
+	}
 
-    public void setSelectedServerObject(ASServerObject selectedServerObject) {
-        this.selectedServerObject = selectedServerObject;
-    }
+	public void setAsServerObjects(Collection<ASServerObject> asServerObjects) {
+		this.asServerObjects = asServerObjects;
+	}
 
-    public ServersHolderBean getServersHolderBean() {
-        return serversHolderBean;
-    }
+	public ASServerObject getSelectedServerObject() {
+		return selectedServerObject;
+	}
 
-    public void setServersHolderBean(ServersHolderBean serversHolderBean) {
-        this.serversHolderBean = serversHolderBean;
-    }
+	public void setSelectedServerObject(ASServerObject selectedServerObject) {
+		this.selectedServerObject = selectedServerObject;
+	}
+
+	public ServersHolderBean getServersHolderBean() {
+		return serversHolderBean;
+	}
+
+	public void setServersHolderBean(ServersHolderBean serversHolderBean) {
+		this.serversHolderBean = serversHolderBean;
+	}
 }

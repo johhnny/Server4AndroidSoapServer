@@ -29,8 +29,12 @@
                         <h:outputText value="#{currentServerObject.serverIpAddress}"/>
                     </p:column>
 
-                    <p:column headerText="#{msg['servers.table.name']}">
-                        <h:outputText value="#{currentServerObject.serverDeviceName}"/>
+                    <p:column headerText="#{msg['servers.table.port']}">
+                        <h:outputText value="#{currentServerObject.serverPort}"/>
+                    </p:column>
+
+					<p:column headerText="#{msg['servers.table.ping']}">
+                        <h:outputText value="#{currentServerObject.serverLastPing}"/>
                     </p:column>
 
                     <p:column headerText="#{msg['servers.table.actions']}">
@@ -60,8 +64,8 @@
                         <h:outputText id="infoId" value="#{serversView.selectedServerObject.serverDeviceId}"
                                       style="font-weight:bold"/>
 
-                        <h:outputLabel for="infoName" value="#{msg['servers.table.name']}: "/>
-                        <h:outputText id="infoName" value="#{serversView.selectedServerObject.serverDeviceName}"
+                        <h:outputLabel for="infoName" value="#{msg['servers.table.ip']}: "/>
+                        <h:outputText id="infoName" value="#{serversView.selectedServerObject.serverIpAddress}"
                                       style="font-weight:bold"/>
 
                     </p:panelGrid>

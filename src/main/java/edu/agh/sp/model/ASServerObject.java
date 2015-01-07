@@ -1,135 +1,117 @@
 package edu.agh.sp.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.UUID;
-
 /**
- * Created by Krzysztof Broncel
- * on 05.01.2015
+ * Created by Krzysztof Broncel on 05.01.2015
  */
 public class ASServerObject implements Serializable, Comparable<ASServerObject> {
-    /* UUID */
-    private String serverDeviceId;
-    /* Last ping */
-    private DateTime serverLastPing;
-    /* Is device active? */
-    private Boolean serverDeviceActive;
-    /* Android device IP address */
-    private String serverIpAddress;
-    /* Android device port */
-    private String serverPort;
-    /* WSDL copy */
-    private String serverWsdlCopy;
-    /* WSDL link */
-    private String serverWsdlExternalLink;
-    /* List of android server methods from WSDL */
-    private List<String> serverMethodsList;
-    /* TODO - czy bedzie potrzebne? */
-    private String serverDeviceName;
 
-    public ASServerObject() {
-        serverDeviceId = UUID.randomUUID().toString();
-        serverDeviceActive = true;
-        serverLastPing = new DateTime();
-    }
+	private static final long serialVersionUID = 6061172966827531631L;
 
-    public String getServerDeviceId() {
-        return serverDeviceId;
-    }
+	/* UUID */
+	private final String serverDeviceId;
+	/* Last ping */
+	private DateTime serverLastPing;
+	/* Is device active? */
+	private Boolean serverDeviceActive;
+	/* Android device IP address */
+	private final String serverIpAddress;
+	/* Android device port */
+	private final Integer serverPort;
+	/* WSDL copy */
+	private final String serverWsdlCopy;
+	/* WSDL link */
+	private final String serverWsdlExternalLink;
+	/* List of android server methods from WSDL */
+	private final List<String> serverMethodsList = new ArrayList<String>();
 
-    public String getServerDeviceName() {
-        return serverDeviceName;
-    }
+	public ASServerObject(String serverDeviceId, DateTime serverLastPing, String serverIpAddress, Integer serverPort, String serverWsdlCopy) {
+		this.serverDeviceId = serverDeviceId;
+		this.serverLastPing = serverLastPing;
+		this.serverIpAddress = serverIpAddress;
+		this.serverPort = serverPort;
+		this.serverWsdlCopy = serverWsdlCopy;
+		this.serverDeviceActive = true;
+		this.serverWsdlExternalLink = "http://" + serverIpAddress + ":" + serverPort + "/?wsdl";
+	}
 
-    public void setServerDeviceName(String serverDeviceName) {
-        this.serverDeviceName = serverDeviceName;
-    }
+	public String getServerDeviceId() {
+		return serverDeviceId;
+	}
 
-    public Boolean getServerDeviceActive() {
-        return serverDeviceActive;
-    }
+	public Boolean getServerDeviceActive() {
+		return serverDeviceActive;
+	}
 
-    public void setServerDeviceActive(Boolean serverDeviceActive) {
-        this.serverDeviceActive = serverDeviceActive;
-    }
+	public void setServerDeviceActive(Boolean serverDeviceActive) {
+		this.serverDeviceActive = serverDeviceActive;
+	}
 
-    public String getServerIpAddress() {
-        return serverIpAddress;
-    }
+	public String getServerIpAddress() {
+		return serverIpAddress;
+	}
 
-    public void setServerIpAddress(String serverIpAddress) {
-        this.serverIpAddress = serverIpAddress;
-    }
+	public Integer getServerPort() {
+		return serverPort;
+	}
 
-    public String getServerPort() {
-        return serverPort;
-    }
+	public String getServerWsdlCopy() {
+		return serverWsdlCopy;
+	}
 
-    public void setServerPort(String serverPort) {
-        this.serverPort = serverPort;
-    }
+	public String getServerWsdlExternalLink() {
+		return serverWsdlExternalLink;
+	}
 
-    public String getServerWsdlCopy() {
-        return serverWsdlCopy;
-    }
+	public DateTime getServerLastPing() {
+		return serverLastPing;
+	}
 
-    public void setServerWsdlCopy(String serverWsdlCopy) {
-        this.serverWsdlCopy = serverWsdlCopy;
-    }
+	public void setServerLastPing(DateTime serverLastPing) {
+		this.serverLastPing = serverLastPing;
+	}
 
-    public String getServerWsdlExternalLink() {
-        return serverWsdlExternalLink;
-    }
+	public List<String> getServerMethodsList() {
+		return serverMethodsList;
+	}
 
-    public void setServerWsdlExternalLink(String serverWsdlExternalLink) {
-        this.serverWsdlExternalLink = serverWsdlExternalLink;
-    }
+	public void addToServerMethodsList(String serverMethod) {
+		if (serverMethod != null && !"".equals(serverMethod)) {
+			this.serverMethodsList.add(serverMethod);
+		}
+	}
 
-    public DateTime getServerLastPing() {
-        return serverLastPing;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
 
-    public void setServerLastPing(DateTime serverLastPing) {
-        this.serverLastPing = serverLastPing;
-    }
+		if (!(o instanceof ASServerObject)) {
+			return false;
+		}
 
-    public List<String> getServerMethodsList() {
-        return serverMethodsList;
-    }
+		ASServerObject that = (ASServerObject) o;
+		if (!serverDeviceId.equals(that.serverDeviceId)) {
+			return false;
+		}
 
-    public void setServerMethodsList(List<String> serverMethodsList) {
-        this.serverMethodsList = serverMethodsList;
-    }
+		return true;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+	@Override
+	public int hashCode() {
+		return serverDeviceId.hashCode();
+	}
 
-        if (!(o instanceof ASServerObject)) {
-            return false;
-        }
-
-        ASServerObject that = (ASServerObject) o;
-        if (!serverDeviceId.equals(that.serverDeviceId)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return serverDeviceId.hashCode();
-    }
-
-    @Override
-    public int compareTo(ASServerObject o) {
-        return serverDeviceId.compareTo(o.getServerDeviceId());
-    }
+	@Override
+	public int compareTo(ASServerObject o) {
+		return serverDeviceId.compareTo(o.getServerDeviceId());
+	}
 
 }
