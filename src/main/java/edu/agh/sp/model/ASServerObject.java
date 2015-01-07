@@ -1,24 +1,27 @@
 package edu.agh.sp.model;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * Created by Krzysztof Broncel
  * on 05.01.2015
- * TODO
  */
 public class ASServerObject implements Serializable, Comparable<ASServerObject> {
     private String serverDeviceId;
     private String serverDeviceName;
     private Boolean serverDeviceActive;
     private String serverIpAddress;
+    private String serverPort;
+    private String serverWsdl;
+
+    public ASServerObject() {
+        serverDeviceId = UUID.randomUUID().toString();
+        serverDeviceActive = true;
+    }
 
     public String getServerDeviceId() {
         return serverDeviceId;
-    }
-
-    public void setServerDeviceId(String serverDeviceId) {
-        this.serverDeviceId = serverDeviceId;
     }
 
     public String getServerDeviceName() {
@@ -43,6 +46,22 @@ public class ASServerObject implements Serializable, Comparable<ASServerObject> 
 
     public void setServerIpAddress(String serverIpAddress) {
         this.serverIpAddress = serverIpAddress;
+    }
+
+    public String getServerPort() {
+        return serverPort;
+    }
+
+    public void setServerPort(String serverPort) {
+        this.serverPort = serverPort;
+    }
+
+    public String getServerWsdl() {
+        return serverWsdl;
+    }
+
+    public void setServerWsdl(String serverWsdl) {
+        this.serverWsdl = serverWsdl;
     }
 
     @Override
@@ -72,4 +91,5 @@ public class ASServerObject implements Serializable, Comparable<ASServerObject> 
     public int compareTo(ASServerObject o) {
         return serverDeviceId.compareTo(o.getServerDeviceId());
     }
+
 }

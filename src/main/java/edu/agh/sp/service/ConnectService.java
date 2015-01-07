@@ -29,7 +29,6 @@ public class ConnectService {
     public Response test() {
         Random r = new Random();
         ASServerObject o = new ASServerObject();
-        o.setServerDeviceId(UUID.randomUUID().toString());
         o.setServerDeviceName("Super android lololo " + o.getServerDeviceId().hashCode());
         o.setServerDeviceActive(r.nextBoolean());
         o.setServerIpAddress(r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256));
@@ -41,15 +40,18 @@ public class ConnectService {
     @Path("/register")
     @Produces(MediaType.TEXT_PLAIN)
     public Response registerDevice(byte[] gzippedWsdl, @HeaderParam("deviceIp") String ip, @HeaderParam("devicePort") String port) {
+        System.err.println("Polaczenie " + ip + ":" + port);
+
+        ASServerObject soapServerObject;
         try {
             String wsdl = decompress(gzippedWsdl);
-            System.out.println(wsdl);
-            System.out.println(ip + ":" + port);
+            soapServerObject = createNewServer(wsdl, ip, port);
+            holder.addServer(soapServerObject);
         } catch (IOException e) {
             System.err.println(e.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
-        return Response.ok().header("deviceToken", UUID.randomUUID().toString()).build();
+        return Response.ok().header("deviceToken", soapServerObject != null ? soapServerObject.getServerDeviceId() : "").build();
     }
 
     @POST
@@ -81,5 +83,15 @@ public class ConnectService {
         gis.close();
         is.close();
         return string.toString();
+    }
+
+    private static ASServerObject createNewServer(String wsdl, String ip, String port) {
+        ASServerObject newObject = new ASServerObject();
+        newObject.setServerIpAddress(ip);
+        newObject.setServerPort(port);
+        newObject.setServerWsdl(wsdl);
+        newObject.setServerDeviceName("Android device " + ip + ":" + port);
+
+        return newObject;
     }
 }
