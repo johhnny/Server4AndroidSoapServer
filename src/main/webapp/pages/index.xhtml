@@ -5,6 +5,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
+
 <h:head>
     <h:outputStylesheet library="css" name="main.css"/>
 </h:head>
@@ -12,12 +13,14 @@
 <h:body>
     <f:view>
         <h:form id="serverListForm" styleClass="centerTables">
+            <p:poll interval="3" listener="#{serversView.updateServersCollection}" update="serverListForm" />
+
             <h3>#{msg['servers.table']}</h3>
 
-            <p:panelGrid>
-                <p:dataTable var="currentServerObject" value="#{serversView.asServerObjects}">
+            <p:panelGrid >
+                <p:dataTable var="currentServerObject" value="#{serversView.asServerObjects}" id="serversTable">
                     <p:column styleClass="iconColumn" headerText="#{msg['servers.table.state']}">
-                        <p:graphicImage styleClass="icon" value="#{currentServerObject.serverDeviceActive ?
+                        <p:graphicImage styleClass="icon" value="#{serversView.isOnline(currentServerObject) ?
                                 'resources/images/online-icon.png' : 'resources/images/offline-icon.png'}"/>
                     </p:column>
 
@@ -34,7 +37,9 @@
                     </p:column>
 
 					<p:column headerText="#{msg['servers.table.ping']}">
-                        <h:outputText value="#{currentServerObject.serverLastPing}"/>
+                        <h:outputText value="#{currentServerObject.serverLastPing}">
+                            <f:convertDateTime type="date" pattern="HH:mm:ss (dd.MM.yyyy)"/>
+                        </h:outputText>
                     </p:column>
 
                     <p:column headerText="#{msg['servers.table.actions']}">
@@ -51,9 +56,9 @@
                         <p:commandButton title="#{msg['servers.disconnect']}" icon="ui-icon ui-icon-closethick">
                         </p:commandButton>
                     </p:column>
-
                 </p:dataTable>
             </p:panelGrid>
+
 
             <p:dialog id="deviceInfoDialog" header="#{msg['servers.details']}" showEffect="fade" hideEffect="explode"
                       widgetVar="deviceInfoDialog" modal="true" resizable="false">

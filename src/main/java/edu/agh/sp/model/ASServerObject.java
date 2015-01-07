@@ -2,9 +2,8 @@ package edu.agh.sp.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-import org.joda.time.DateTime;
 
 /**
  * Created by Krzysztof Broncel on 05.01.2015
@@ -16,9 +15,7 @@ public class ASServerObject implements Serializable, Comparable<ASServerObject> 
 	/* UUID */
 	private final String serverDeviceId;
 	/* Last ping */
-	private DateTime serverLastPing;
-	/* Is device active? */
-	private Boolean serverDeviceActive;
+	private Date serverLastPing;
 	/* Android device IP address */
 	private final String serverIpAddress;
 	/* Android device port */
@@ -30,26 +27,17 @@ public class ASServerObject implements Serializable, Comparable<ASServerObject> 
 	/* List of android server methods from WSDL */
 	private final List<String> serverMethodsList = new ArrayList<String>();
 
-	public ASServerObject(String serverDeviceId, DateTime serverLastPing, String serverIpAddress, Integer serverPort, String serverWsdlCopy) {
+	public ASServerObject(String serverDeviceId, Date serverLastPing, String serverIpAddress, Integer serverPort, String serverWsdlCopy) {
 		this.serverDeviceId = serverDeviceId;
 		this.serverLastPing = serverLastPing;
 		this.serverIpAddress = serverIpAddress;
 		this.serverPort = serverPort;
 		this.serverWsdlCopy = serverWsdlCopy;
-		this.serverDeviceActive = true;
 		this.serverWsdlExternalLink = "http://" + serverIpAddress + ":" + serverPort + "/?wsdl";
 	}
 
 	public String getServerDeviceId() {
 		return serverDeviceId;
-	}
-
-	public Boolean getServerDeviceActive() {
-		return serverDeviceActive;
-	}
-
-	public void setServerDeviceActive(Boolean serverDeviceActive) {
-		this.serverDeviceActive = serverDeviceActive;
 	}
 
 	public String getServerIpAddress() {
@@ -68,11 +56,11 @@ public class ASServerObject implements Serializable, Comparable<ASServerObject> 
 		return serverWsdlExternalLink;
 	}
 
-	public DateTime getServerLastPing() {
+	public Date getServerLastPing() {
 		return serverLastPing;
 	}
 
-	public void setServerLastPing(DateTime serverLastPing) {
+	public void setServerLastPing(Date serverLastPing) {
 		this.serverLastPing = serverLastPing;
 	}
 

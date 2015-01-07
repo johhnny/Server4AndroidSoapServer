@@ -2,6 +2,7 @@ package edu.agh.sp.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -19,7 +20,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 
 import edu.agh.sp.ejb.ServersHolderBean;
 import edu.agh.sp.model.ASServerObject;
@@ -43,7 +43,7 @@ public class ConnectService {
 			String wsdl = decompress(gzippedWsdl);
 			wsdl = updateWsdlLocationTag(wsdl, ip, port);
 			String serverDeviceId = UUID.randomUUID().toString();
-			ASServerObject soapServerObject = new ASServerObject(serverDeviceId, new DateTime(), ip, Integer.parseInt(port), wsdl);
+			ASServerObject soapServerObject = new ASServerObject(serverDeviceId, new Date(), ip, Integer.parseInt(port), wsdl);
 			holder.addServer(soapServerObject);
 			logger.info("Mobile server registered. IP: " + ip + ", port: " + port);
 			return Response.ok().header("deviceToken", soapServerObject.getServerDeviceId()).build();
@@ -72,7 +72,7 @@ public class ConnectService {
 		if (StringUtils.isEmpty(token)) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		holder.updatePingTimeForServer(token, new DateTime());
+		holder.updatePingTimeForServer(token, new Date());
 		logger.fine("Ping received from: " + token);
 		return Response.ok().build();
 	}

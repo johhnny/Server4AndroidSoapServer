@@ -2,6 +2,7 @@ package edu.agh.sp.jsf;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +13,7 @@ import javax.faces.bean.ViewScoped;
 
 import edu.agh.sp.ejb.ServersHolderBean;
 import edu.agh.sp.model.ASServerObject;
+import org.joda.time.DateTime;
 
 /**
  * Created by Krzysztof Broncel on 05.01.2015
@@ -19,7 +21,6 @@ import edu.agh.sp.model.ASServerObject;
 @ViewScoped
 @ManagedBean(name = "serversView")
 public class ServersViewMBean implements Serializable {
-
 	private static final long serialVersionUID = 723258610733794351L;
 
 	private static final Logger logger = Logger.getLogger(ServersViewMBean.class.getName());
@@ -34,10 +35,16 @@ public class ServersViewMBean implements Serializable {
 	@PostConstruct
 	private void init() {
 		logger.log(Level.FINE, "START");
-
-		asServerObjects = serversHolderBean.getServers();
-
+		updateServersCollection();
 		logger.log(Level.FINE, "END");
+	}
+
+	public void updateServersCollection() {
+		asServerObjects = serversHolderBean.getServers();
+	}
+
+	public boolean isOnline(ASServerObject serverObject) {
+		return (new DateTime().minusSeconds(20).isBefore(new DateTime(serverObject.getServerLastPing())));
 	}
 
 	public Collection<ASServerObject> getAsServerObjects() {
