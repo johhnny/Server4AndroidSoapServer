@@ -2,7 +2,6 @@ package edu.agh.sp.jsf;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,9 +10,10 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.joda.time.DateTime;
+
 import edu.agh.sp.ejb.ServersHolderBean;
 import edu.agh.sp.model.ASServerObject;
-import org.joda.time.DateTime;
 
 /**
  * Created by Krzysztof Broncel on 05.01.2015

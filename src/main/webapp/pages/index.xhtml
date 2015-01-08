@@ -42,6 +42,12 @@
                         </h:outputText>
                     </p:column>
 
+                    <p:column headerText="#{msg['servers.table.methods']}">
+                        <p:dataList value="#{currentServerObject.serverMethodsList}" var="method" itemType="disc">
+							#{method}
+						</p:dataList>
+                    </p:column>
+
                     <p:column headerText="#{msg['servers.table.actions']}">
                         <p:commandButton update=":serverListForm:deviceInfoPanel"
                                          oncomplete="PF('deviceInfoDialog').show()" title="#{msg['servers.details']}"

@@ -2,7 +2,13 @@ package edu.agh.sp.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -18,8 +24,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.wsdl.Definition;
+import javax.wsdl.Operation;
+import javax.wsdl.PortType;
+import javax.wsdl.WSDLException;
+import javax.wsdl.factory.WSDLFactory;
+import javax.wsdl.xml.WSDLReader;
 
 import org.apache.commons.lang3.StringUtils;
+import org.xml.sax.InputSource;
 
 import edu.agh.sp.ejb.ServersHolderBean;
 import edu.agh.sp.model.ASServerObject;
@@ -44,6 +57,7 @@ public class ConnectService {
 			wsdl = updateWsdlLocationTag(wsdl, ip, port);
 			String serverDeviceId = UUID.randomUUID().toString();
 			ASServerObject soapServerObject = new ASServerObject(serverDeviceId, new Date(), ip, Integer.parseInt(port), wsdl);
+			extractMethodsFromWsdl(soapServerObject);
 			holder.addServer(soapServerObject);
 			logger.info("Mobile server registered. IP: " + ip + ", port: " + port);
 			return Response.ok().header("deviceToken", soapServerObject.getServerDeviceId()).build();
@@ -111,5 +125,24 @@ public class ConnectService {
 		return StringUtils.replaceOnce(wsdl, 
 				"<SOAP:address location=\"http://localhost:8080\"/>", 
 				"<SOAP:address location=\"http://" + ip + ":" + port + "\"/>");
+	}
+
+	@SuppressWarnings("rawtypes")
+	private static void extractMethodsFromWsdl(ASServerObject asServerObject) throws WSDLException, MalformedURLException, URISyntaxException {
+		WSDLReader reader = WSDLFactory.newInstance().newWSDLReader();
+		Definition def = reader.readWSDL(null, new InputSource(new StringReader(asServerObject.getServerWsdlCopy())));
+		Map portTypes = def.getPortTypes();
+		Iterator portIter = portTypes.entrySet().iterator();
+		while (portIter.hasNext()) {
+			Map.Entry entry = (Map.Entry) portIter.next();
+			PortType pt = (PortType) entry.getValue();
+			List operations = pt.getOperations();
+			for (Object o : operations) {
+				Operation oper = (Operation) o;
+				asServerObject.addToServerMethodsList((oper.getOutput().getMessage() != null ? oper.getOutput().getMessage().getQName().getLocalPart() : "")
+						+ " : " + oper.getName() + "( " + (oper.getInput().getMessage() != null ? oper.getInput().getMessage().getQName().getLocalPart() : "")
+						+ " )");
+			}
+		}
 	}
 }
