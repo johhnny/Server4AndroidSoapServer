@@ -19,6 +19,9 @@ import org.joda.time.DateTime;
 public class ServersHolderBean {
 	private static final Logger logger = Logger.getLogger(ServersHolderBean.class.getName());
 
+	private static final int TIME_PERIOD_INACTIVE = 30;
+	private static final int TIME_PERIOD_OFFLINE = 60;
+
 	private Map<String, ASServerObject> serverObjectsMap;
 
 	@PostConstruct
@@ -51,20 +54,21 @@ public class ServersHolderBean {
 		return serverObjectsMap.get(token);
 	}
 
-    /**
-     * Jesli AndroidSoapServer jest offline przez dlugi czas (5 minut) a nie wyslal komunikatu
-     * "removeServer" bo na przyklad utracil polaczenie, to trzeba go usunac recznie (raz na 10 minut).
-     */
-    @Schedule(second="0", minute="*/10",hour="*", persistent=false)
-    private void removeOfflineServers(){
+    @Schedule(second="0/10", minute="*",hour="*", persistent=false)
+    private void updateServersActivity(){
         logger.log(Level.FINE, "START");
-        DateTime compareTime = new DateTime().minusMinutes(5);
+
+        DateTime inactiveTime = new DateTime().minusSeconds(TIME_PERIOD_INACTIVE);
+		DateTime offlineTime = new DateTime().minusSeconds(TIME_PERIOD_OFFLINE);
 
         Iterator<Map.Entry<String, ASServerObject>> iterator = serverObjectsMap.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<String, ASServerObject> entry = iterator.next();
-            if(compareTime.isAfter(new DateTime(entry.getValue().getServerLastPing()))) {
-                logger.log(Level.FINE, "Timeout. Removing device with token: " + entry.getValue().getServerLastPing());
+			ASServerObject serverObject = iterator.next().getValue();
+			DateTime serverLastPing = new DateTime(serverObject.getServerLastPing());
+
+			serverObject.setServerActive(inactiveTime.isBefore(serverLastPing));
+			if(!serverObject.getServerActive() && offlineTime.isAfter(serverLastPing)) {
+                logger.log(Level.INFO, "Timeout. Removing device with token: " + serverObject.getServerDeviceId());
                 iterator.remove();
             }
         }

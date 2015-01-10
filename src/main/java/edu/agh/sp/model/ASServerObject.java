@@ -16,6 +16,8 @@ public class ASServerObject implements Serializable, Comparable<ASServerObject> 
 	private final String serverDeviceId;
 	/* Last ping */
 	private Date serverLastPing;
+	/* Is server marked as 'active'? */
+	private Boolean serverActive;
 	/* Android device IP address */
 	private final String serverIpAddress;
 	/* Android device port */
@@ -34,6 +36,7 @@ public class ASServerObject implements Serializable, Comparable<ASServerObject> 
 		this.serverPort = serverPort;
 		this.serverWsdlCopy = serverWsdlCopy;
 		this.serverWsdlExternalLink = "http://" + serverIpAddress + ":" + serverPort + "/?wsdl";
+		this.serverActive = true;
 	}
 
 	public String getServerDeviceId() {
@@ -66,6 +69,14 @@ public class ASServerObject implements Serializable, Comparable<ASServerObject> 
 
 	public List<String> getServerMethodsList() {
 		return serverMethodsList;
+	}
+
+	public Boolean getServerActive() {
+		return serverActive;
+	}
+
+	public void setServerActive(Boolean serverActive) {
+		this.serverActive = serverActive;
 	}
 
 	public void addToServerMethodsList(String serverMethod) {

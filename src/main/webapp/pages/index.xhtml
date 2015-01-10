@@ -20,7 +20,7 @@
             <p:panelGrid >
                 <p:dataTable var="currentServerObject" value="#{serversView.asServerObjects}" id="serversTable">
                     <p:column styleClass="iconColumn" headerText="#{msg['servers.table.state']}">
-                        <p:graphicImage styleClass="icon" value="#{serversView.isOnline(currentServerObject) ?
+                        <p:graphicImage styleClass="icon" value="#{currentServerObject.serverActive ?
                                 'resources/images/online-icon.png' : 'resources/images/offline-icon.png'}"/>
                     </p:column>
 

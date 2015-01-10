@@ -43,10 +43,6 @@ public class ServersViewMBean implements Serializable {
 		asServerObjects = serversHolderBean.getServers();
 	}
 
-	public boolean isOnline(ASServerObject serverObject) {
-		return (new DateTime().minusSeconds(20).isBefore(new DateTime(serverObject.getServerLastPing())));
-	}
-
 	public Collection<ASServerObject> getAsServerObjects() {
 		return asServerObjects;
 	}
